@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body>
+    <nav class="flex items-center justify-between w-full px-5 py-5 sm:py-7 lg:px-15">
+        <div class="flex items-center gap-1">
+            <img src="./assets/logo.png" class="w-10 lg:w-15" alt="">
+            <span class="text-xl font-bold lg:text-4xl">Furniro</span>
+        </div>
+
+        <div class="space-x-4 hidden sm:block lg:space-x-10 ">
+            <a href="" class="text-md font-semibold lg:text-xl">Home</a>
+            <a href="" class="text-md font-semibold lg:text-xl">Shop</a>
+            <a href="" class="text-md font-semibold lg:text-xl">About</a>
+            <a href="" class="text-md font-semibold lg:text-xl">Contact</a>
+        </div>
+
+        <div class="flex items-center gap-6 sm:gap-4 md:gap-6">
+            <img src="./assets/user.png" class="w-6 h-6 object-contain " alt="">
+            <img src="./assets/search.png" class="w-6 h-6 object-contain " alt="">
+            <img src="./assets/like.png" class="w-6 h-6 object-contain hidden sm:block " alt="">
+            <img src="./assets/cart.png" class="w-6 h-6 object-contain hidden sm:block" alt="">
+        </div>
+    </nav>
+
+    <section class="relative">
+        <img src="./assets/hero.jpg" class="h-[90vh] w-[100vw] object-cover" alt="">
+
+        <div class="bg-[#FFF3E3] w-[343px] lg:w-[643px] p-10 py-15 rounded-xl absolute right-5 bottom-15  !sm:right-15 !sm:bottom-20">
+            <div class="flex flex-col gap-5">
+                <span class="text-xl font-semibold tracking-widest">New Arrival</span>
+                <p class="text-[#B88E2F] text-3xl font-bold leading-[40px] l">Discover Our New Collection</p>
+                <p class="text-md font-semibold tracking-widest">Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit. Ut
+                    elit tellus, luctus nec ullamcorper mattis.
+                </p>
+            </div>
+            <button class="mt-10 py-5 px-10 bg-[#B88E2F] text-md font-bold text-white">BUY NOW</button>
+        </div>
+    </section>
+
+
+
+
+</body>
+
+</html>

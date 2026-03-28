@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            /* universal selector */
+            margin: 0;
+            /* margin reset */
+            padding: 0;
+            /* reset padding */
+            font-family: "Montserrat", sans-serif;
+        }
+
+        .container {
+            /* class selector */
+            width: 400px;
+            background-color: rgb(245, 244, 244);
+            height: 500px;
+            border: 2px dashed #3A3522;
+            border-radius: 20px;
+
+            overflow: hidden;
+            box-shadow: 1px 2px 5px 0px black;
+            /*padding: 10px;*/
+            /* padding-top: 20px; */
+            padding: 10px 20px 30px 50px;
+            /* box model */
+
+            margin: 30px;
+        }
+
+        #thumb {
+            /* id selector */
+            height: 50%;
+            width: 100%;
+            object-fit: cover;
+            /* cover, contain */
+
+        }
+
+        .inner-contaier {
+            height: 50%;
+            text-align: center;
+
+        }
+
+        .inner-contaier>p:first-child {
+            /* element/tag selector */
+
+            font-size: xx-large;
+            font-weight: 500;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+        }
+
+        .inner-contaier>p:nth-child(2) {
+            font-size: large;
+            text-align: justify;
+        }
+
+        #btn {
+            background-color: #3A3522;
+            color: white;
+            font-size: large;
+            height: 30px;
+            width: 200px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 1px 2px 5px 0px black;
+        }
+    </style>
+
+</head>
+<!-- css- inline css , internal css, external css -->
+
+<body>
+
+    <div class="container" id="">
+        <img id="thumb" src="https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3" alt="image of something">
+
+        <div class="inner-contaier">
+            <p>Lorem ipsum dolor sit amet.</p>
+
+            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusantium nemo, impedit aliquam, optio
+                facilis quae voluptates, similique iure odio repudiandae nesciunt. Eligendi animi, exercitationem</p>
+
+            <button id="btn">Read More!</button>
+        </div>
+    </div>
+
+</body>
+
+</html>
