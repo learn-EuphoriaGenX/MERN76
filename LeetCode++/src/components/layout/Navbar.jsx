@@ -1,7 +1,15 @@
-import { Search, Bell, User, Menu, X } from 'lucide-react';
+import { Search, Bell, User, Menu, X, BellDot } from 'lucide-react';
 import { useState } from 'react';
+import Button from '../common/Button';
+import Input from '../common/Input';
+import { Link } from 'react-router-dom';
 
 export default function Navbar() {
+
+
+    
+
+
 
     const navLinks = [
         { name: 'Problems', href: '#' },
@@ -17,14 +25,16 @@ export default function Navbar() {
                 <div className="h-14 flex items-center justify-between">
                     {/* Logo */}
                     <div className="flex items-center gap-8">
-                        <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 bg-[#f9b13f] rounded flex items-center justify-center text-black font-bold text-xl">
-                                L
+                        <Link to="/">
+                            <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 bg-[#f9b13f] rounded flex items-center justify-center text-black font-bold text-xl">
+                                    L
+                                </div>
+                                <span className="text-white font-semibold text-2xl tracking-tight">
+                                    LeetCode
+                                </span>
                             </div>
-                            <span className="text-white font-semibold text-2xl tracking-tight">
-                                LeetCode
-                            </span>
-                        </div>
+                        </Link>
 
                         {/* Desktop Navigation */}
                         <div className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-300">
@@ -41,37 +51,34 @@ export default function Navbar() {
                     </div>
 
                     {/* Search Bar */}
-                    <div className="hidden md:flex flex-1 max-w-xl mx-8">
-                        <div className="relative w-full">
-                            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                                <Search size={18} />
-                            </div>
-                            <input
-                                type="text"
-                                placeholder="Search problems, contests, etc."
-                                className="w-full bg-[#1a1c23] border border-gray-700 rounded-lg pl-11 py-2 text-sm focus:outline-none focus:border-[#f9b13f] text-gray-200 placeholder-gray-500"
-                            />
-                        </div>
+
+                    <div className="hidden lg:flex flex-1 max-w-xl mx-8 ">
+                        <Input className='w-md' leftIcon={Search} placeholder="Search problems, contests, etc." />
                     </div>
 
                     {/* Right Side */}
                     <div className="flex items-center gap-4">
                         {/* Premium Button */}
-                        <a
-                            href="#"
-                            className="hidden md:block px-4 py-1.5 text-sm font-medium bg-gradient-to-r from-amber-400 to-yellow-500 text-black rounded hover:brightness-110 transition"
-                        >
+                        <Button size='md' variant='gradient' >
                             Premium
-                        </a>
+                        </Button>
 
                         {/* Icons */}
-                        <button className="p-2 text-gray-400 hover:text-white transition">
-                            <Bell size={20} />
-                        </button>
 
-                        <button className="p-2 text-gray-400 hover:text-white transition">
+                        {/* <Button size='sm' variant='ghost'>
+                            <Bell size={20} />
+                        </Button>
+                        <Button size='sm' variant='ghost' >
                             <User size={20} />
-                        </button>
+                        </Button> */}
+
+
+                        <Link to="/sign-in">
+                            <Button variant='ghost' className='whitespace-nowrap'>
+                                Register or Log in
+                            </Button>
+                        </Link>
+
 
                         {/* Mobile Menu Button */}
                         <button
