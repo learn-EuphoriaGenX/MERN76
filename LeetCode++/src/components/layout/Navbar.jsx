@@ -2,21 +2,16 @@ import { Search, Bell, User, Menu, X, BellDot } from 'lucide-react';
 import { useState } from 'react';
 import Button from '../common/Button';
 import Input from '../common/Input';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 export default function Navbar() {
 
-
-    
-
-
-
     const navLinks = [
-        { name: 'Problems', href: '#' },
-        { name: 'Contest', href: '#' },
-        { name: 'Discuss', href: '#' },
-        { name: 'Interview', href: '#' },
-        { name: 'Store', href: '#' },
+        { name: 'Problems', link: '/problems' },
+        { name: 'Create', link: '/create' },
+        { name: 'Discuss', link: '/discuss' },
+        { name: 'Store', link: '/store' },
+        { name: 'Test', link: '/test' }
     ];
 
     return (
@@ -39,13 +34,17 @@ export default function Navbar() {
                         {/* Desktop Navigation */}
                         <div className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-300">
                             {navLinks.map((item, idx) => (
-                                <a
+                                <NavLink
                                     key={idx}
-                                    href={item.href}
-                                    className="hover:text-white transition-colors hover:underline underline-offset-4"
+                                    to={item.link}
+                                    className={({ isActive }) =>
+                                        isActive
+                                            ? "text-[#f9b13f] transition-colors hover:underline underline-offset-4"
+                                            : "text-gray-300 transition-colors hover:underline underline-offset-4"
+                                    }
                                 >
                                     {item.name}
-                                </a>
+                                </NavLink>
                             ))}
                         </div>
                     </div>
