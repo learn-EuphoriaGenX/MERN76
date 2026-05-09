@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 export default function Button({
     variant = 'primary',
     size = 'md',
@@ -8,6 +9,7 @@ export default function Button({
     fullWidth = false,
     loading = false,
     className = '',
+    to,
     disabled,
     ...props
 }) {
@@ -26,9 +28,17 @@ export default function Button({
         md: 'px-5 py-2 text-sm',
         lg: 'px-6 py-3 text-base',
     };
+    const navigate = useNavigate(0)
+
+    const handlClick = () => {
+        if (to) {
+            navigate(to)
+        }
+    }
 
     return (
         <button
+            onClick={handlClick}
             className={`
         ${baseStyles}
         ${variants[variant]}

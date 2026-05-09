@@ -1,78 +1,140 @@
-import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import React from 'react';
+import { Container, Cable, Database, Star, ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-import Slide from "../components/common/Slide";
-
-function Problems() {
-  const slides = [
-    {
-      title: "LeetCode at Your Fingertips",
-      subtitle: "Practice anywhere, anytime",
-      background: "from-indigo-700 via-purple-700 to-violet-700",
-      image: "https://picsum.photos/id/1015/800/600", // replace with real image
-      link: "https://leetcode.com",
-    },
-    {
-      title: "JavaScript 30 Days Challenge",
-      subtitle: "Beginner Friendly",
-      background: "from-orange-500 via-amber-500 to-red-500",
-      image: "https://picsum.photos/id/201/800/600",
-      link: "https://leetcode.com",
-    },
-    {
-      title: "Top Interview Questions",
-      subtitle: "Master FAANG interviews",
-      background: "from-blue-600 via-cyan-500 to-sky-600",
-      image: "https://picsum.photos/id/237/800/600",
-      link: "https://leetcode.com",
-    },
-    {
-      title: "LeetCode Premium",
-      subtitle: "Unlock your potential",
-      background: "from-purple-600 via-fuchsia-600 to-pink-600",
-      image: "https://picsum.photos/id/180/800/600",
-      link: "https://leetcode.com",
-    },
+export default function Problems() {
+  const topics = [
+    { icon: <Container className="w-5 h-5" />, name: "All Topics" },
+    { icon: <Cable className="w-5 h-5" />, name: "Algorithms" },
+    { icon: <Database className="w-5 h-5" />, name: "Database" },
   ];
 
-  return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
-      <h2 className="text-3xl font-bold text-center mb-10 text-white">
-        Featured on LeetCode
-      </h2>
+  const problems = [
+    {
+      id: 1,
+      title: "Container With Most Water",
+      difficulty: "Medium",
+      acceptance: "52.3%",
+      tags: ["Array", "Two Pointers", "Greedy"],
+      isFavourite: true,
+      slug: "container-with-most-water"
+    },
+    {
+      id: 2,
+      title: "Longest Substring Without Repeating Characters",
+      difficulty: "Medium",
+      acceptance: "34.8%",
+      tags: ["String", "Sliding Window", "Hash Table"],
+      isFavourite: false,
+      slug: "longest-substring-without-repeating-characters"
+    },
+    {
+      id: 3,
+      title: "3Sum",
+      difficulty: "Medium",
+      acceptance: "31.2%",
+      tags: ["Array", "Two Pointers", "Sorting"],
+      isFavourite: false,
+      slug: "3sum"
+    },
+    {
+      id: 2,
+      title: "Longest Substring Without Repeating Characters",
+      difficulty: "Medium",
+      acceptance: "34.8%",
+      tags: ["String", "Sliding Window", "Hash Table"],
+      isFavourite: false,
+      slug: "longest-substring-without-repeating-characters"
+    }
+  ];
 
-      <Swiper
-        modules={[Navigation, Pagination, Autoplay]}
-        spaceBetween={30}
-        slidesPerView={1}
-        breakpoints={{
-          768: { slidesPerView: 2 },
-          1024: { slidesPerView: 3 },
-        }}
-        navigation
-        pagination={{ clickable: true }}
-        autoplay={{ delay: 3000, disableOnInteraction: false }}
-        loop={true}
-        className="rounded-3xl"
-      >
-        {slides.map((slide, index) => (
-          <SwiperSlide key={index}>
-            <Slide
-              title={slide.title}
-              subtitle={slide.subtitle}
-              background={slide.background}
-              image={slide.image}
-              link={slide.link}
-            />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+  const navigate = useNavigate()
+
+  const navigateTo = (link) => {
+    navigate('/' + link)
+  }
+
+  const getDifficultyColor = (difficulty) => {
+    if (difficulty === "Easy") return "text-emerald-500 bg-emerald-500/10";
+    if (difficulty === "Medium") return "text-amber-500 bg-amber-500/10";
+    return "text-red-500 bg-red-500/10";
+  };
+
+  return (
+    <div className="bg-zinc-950 min-h-screen text-white px-30 py-10">
+      {/* Topics Section */}
+      <div className="mb-10 sticky top-14 bg-zinc-950/20 backdrop-blur-sm pb-3 ">
+        <h2 className="text-2xl font-bold mb-4">Topics</h2>
+        <div className="flex gap-4 flex-wrap ">
+          {topics.map((topic, index) => (
+            <div
+              key={index}
+              className="flex items-center gap-3 px-5 py-3 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 hover:border-violet-500 rounded-2xl cursor-pointer transition-all duration-200"
+            >
+              <span className="text-violet-400">{topic.icon}</span>
+              <span className="font-medium">{topic.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Problems List */}
+      <div>
+        <h2 className="text-2xl font-bold mb-6">Problems</h2>
+
+        <div className="space-y-4">
+          {problems.map((problem) => (
+            <div
+              key={problem.id}
+              onClick={() => { navigateTo(problem.slug) }}
+              className="group bg-zinc-900 border border-zinc-800 hover:border-zinc-700 rounded-2xl p-5 flex items-center gap-6 transition-all hover:shadow-xl"
+            >
+              {/* Favourite Button */}
+              <button className="text-zinc-500 hover:text-yellow-400 transition-colors">
+                <Star
+                  className={`w-6 h-6 ${problem.isFavourite ? 'fill-yellow-400 text-yellow-400' : ''}`}
+                />
+              </button>
+
+              {/* Problem Info */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-4">
+                  <h3 className="font-semibold text-lg group-hover:text-violet-400 transition-colors">
+                    {problem.title}
+                  </h3>
+                </div>
+
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {problem.tags.map((tag, idx) => (
+                    <span
+                      key={idx}
+                      className="text-xs px-3 py-1 bg-zinc-800 text-zinc-400 rounded-full"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right Side Info */}
+              <div className="flex items-center gap-8 text-sm">
+                {/* Difficulty */}
+                <div className={`px-4 py-1.5 rounded-full text-sm font-medium ${getDifficultyColor(problem.difficulty)}`}>
+                  {problem.difficulty}
+                </div>
+
+                {/* Acceptance */}
+                <div className="text-zinc-400 min-w-[80px] text-right">
+                  {problem.acceptance}
+                </div>
+
+                {/* Link Arrow */}
+                <ChevronRight className="w-5 h-5 text-zinc-500 group-hover:text-white transition-colors" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
-
-export default Problems;
