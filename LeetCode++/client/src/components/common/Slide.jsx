@@ -11,7 +11,6 @@ export default function Slide({
     icon,
     showImage = true,
 }) {
-
     return (
         <a
             href={link}
