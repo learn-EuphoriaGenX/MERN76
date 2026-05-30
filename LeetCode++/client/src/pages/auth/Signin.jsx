@@ -1,10 +1,54 @@
-import React from 'react'; // Assuming your custom Input component
+import React, { useState } from 'react'; // Assuming your custom Input component
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
 import { User2Icon, KeyIcon } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import axios from 'axios';
 
-function Signin() {
+function Signin({ setIsAuthenticated }) {
+
+    let [data, setData] = useState({
+        email: "",
+        password: ""
+    })
+
+
+    let [loading, setLoading] = useState(false)
+    let navigate = useNavigate()
+
+    let handleSubmit = async (event) => {
+        if (loading) return;
+        event.preventDefault();
+
+        if (data.email.trim() == '') {
+            return toast.error("Email is Required")
+        } else if (data.password.trim() == '') {
+            return toast.error("Password is Required")
+        }
+
+        try {
+            setLoading(true)
+            console.log(data);
+
+            let respose = await axios.post("http://127.0.0.1:5500/api/auth/login/", data)
+            console.log(respose.data);
+
+            toast.success(respose.data.msg)
+            setIsAuthenticated(true)
+            // navigate('/')
+
+        } catch (error) {
+            toast.error(error.response.data.msg)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+
+
+
+
     return (
         <div className="min-h-screen bg-zinc-950 text-white flex items-center justify-center overflow-hidden">
             <div className="max-w-md w-full px-6 py-12">
@@ -15,14 +59,15 @@ function Signin() {
                         Sign in to continue coding
                     </p>
 
-                    <form className="space-y-6">
+                    <form className="space-y-6" onSubmit={handleSubmit}>
                         <Input
                             type="email"
                             name="email"
                             placeholder="Email address"
                             leftIcon={User2Icon}
                             className='py-3'
-
+                            onChange={(e) => setData({ ...data, email: e.target.value })}
+                            value={data.email}
                         />
 
                         <Input
@@ -31,6 +76,8 @@ function Signin() {
                             placeholder="Password"
                             leftIcon={KeyIcon}
                             className='py-3'
+                            onChange={(e) => setData({ ...data, password: e.target.value })}
+                            value={data.password}
                         />
 
                         <div className="flex items-center justify-between text-sm">
@@ -45,7 +92,7 @@ function Signin() {
                             fullWidth
                             type="submit"
                         >
-                            Sign In
+                            {loading ? "Processing..." : "Sign In"}
                         </Button>
                     </form>
 

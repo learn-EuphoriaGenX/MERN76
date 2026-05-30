@@ -30,6 +30,14 @@ const userSchema = new Schema({
         enum: ["Free", "Pro", "Premium"],
         default: "Free"
     },
+    payment: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Payment"
+    },
+    planValidUpto: {
+        type: Date,
+        default: null
+    },
     profileImg: {
         type: String,
         default: "",

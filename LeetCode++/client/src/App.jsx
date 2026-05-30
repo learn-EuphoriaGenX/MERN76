@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import Home from './pages/Home';
@@ -13,13 +13,15 @@ import Store from './pages/Store';
 
 function App() {
 
+  let [isAuthenticated, setIsAuthenticated] = useState(false)
+
   return (
     <div>
-      <Navbar />
+      <Navbar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
       <div className='mt-13'>
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/sign-in' element={<Signin />} />
+          <Route path='/sign-in' element={<Signin setIsAuthenticated={setIsAuthenticated} />} />
           <Route path='/sign-up' element={<Signup />} />
           <Route path='/problems' element={<Problems />} />
           <Route path='/create' element={<Create />} />

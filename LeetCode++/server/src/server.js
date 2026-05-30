@@ -1,6 +1,12 @@
 let express = require('express')
 const dbConnect = require('./config/db.config')
 let app = express()
+let cors = require("cors")
+
+
+app.use(cors({
+    origin: "*"
+}))
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))

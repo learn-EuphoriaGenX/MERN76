@@ -2,6 +2,7 @@ let User = require("../models/user.model");
 let Otp = require("../models/otp.model");
 const { sendMail } = require("../utils/sendmail");
 const bcrypt = require("bcryptjs");
+const { createJWT } = require("../utils/jwt");
 
 
 module.exports.sendOtp = async (req, res) => {
@@ -27,7 +28,7 @@ module.exports.sendOtp = async (req, res) => {
                 email: email,
                 otp: otp
             })
-
+            console.log(otp)
             return res.status(200).json({ success: true, msg: "OTP sent successfully" })
         }
 
@@ -74,12 +75,29 @@ module.exports.register = async (req, res) => {
         }
 
         password = await bcrypt.hash(password, 10)
+        let newUser;
 
-        let newUser = await User.create({
-            username: username,
-            email: email,
-            password: password
-        })
+        if (req.body.secret) {
+
+            if (req.body.secret === process.env.ADMIN_SECRET) {
+                newUser = await User.create({
+                    username: username,
+                    email: email,
+                    password: password,
+                    role: "admin"
+                })
+            } else {
+                return res.status(400).json({ success: false, msg: "Invalid admin secret" })
+            }
+
+        } else {
+            newUser = await User.create({
+                username: username,
+                email: email,
+                password: password,
+                role: "user"
+            })
+        }
 
         newUser.password = undefined
         return res.status(200).json({ success: true, msg: "User registered successfully", user: newUser })
@@ -108,7 +126,17 @@ module.exports.login = async (req, res) => {
         }
 
         user.password = undefined
-        return res.status(200).json({ success: true, msg: "Login successfully", user: user })
+        // jwt
+        let payload = {
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            role: user.role
+        }
+
+        let token = createJWT(payload)
+
+        return res.status(200).json({ success: true, msg: "Login successfully", user: user, token: token })
 
     } catch (error) {
         return res.status(500).json({ success: false, msg: "Internal Server Error" })
@@ -116,6 +144,55 @@ module.exports.login = async (req, res) => {
 
 }
 
-module.exports.profile = (req, res) => {
-    res.send("profile")
+module.exports.profile = async (req, res) => {
+    try {
+
+        let _id = req.user._id
+        let token = req.headers.authorization
+        let user = await User.findById(_id)
+        if (!user) {
+            return res.status(400).json({ success: false, msg: "user not found" })
+        }
+        user.password = undefined
+        return res.status(200).json({ success: true, msg: "Profile fetched successfully", user: user, token: token })
+    } catch (error) {
+        return res.status(500).json({ success: false, msg: "Internal Server Error" })
+    }
+}
+
+module.exports.updateProfile = async (req, res) => {
+    try {
+
+        let _id = req.user._id
+        let user = User.findById(_id);
+        if (!user) {
+            return res.status(400).json({ success: false, msg: "user not found" })
+
+        } else if (req.body.email !== user.email || req.body.username !== user.username) {
+            if (req.body.email !== user.email) {
+                let isEmailExists = await User.findOne({ email: req.body.email })
+                if (isEmailExists) {
+                    return res.status(400).json({ success: false, msg: "Email already exists" })
+                }
+            } else if (req.body.username !== user.username) {
+                let isUsernameExists = await User.findOne({ username: req.body.username })
+                if (isUsernameExists) {
+                    return res.status(400).json({ success: false, msg: "Username already exists" })
+                }
+            }
+        }
+
+        let updatedUser = await User.findByIdAndUpdate({ _id }, req.body, { new: true })
+
+        if (req.body.password) {
+            updatedUser.password = await bcrypt.hash(req.body.password, 10)
+        }
+        await updatedUser.save()
+        updatedUser.password = undefined
+        return res.status(200).json({ success: true, msg: "Profile updated successfully", user: updatedUser })
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ success: false, msg: "Internal Server Error" })
+    }
 }

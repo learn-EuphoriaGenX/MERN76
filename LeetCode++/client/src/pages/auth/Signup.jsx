@@ -4,6 +4,9 @@ import Button from '../../components/common/Button';
 import { KeyIcon, User2Icon } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import axios from 'axios';
+import OTPModal from '../../features/auth/OTPModal';
+
 
 function Signup() {
     let navigate = useNavigate()
@@ -14,9 +17,63 @@ function Signup() {
         isAccepted: false
     })
 
-    let handleSubmit = (event) => {
-        event.preventDefault();
+    let [loading, setLoading] = useState(false)
+    let [showOTPModal, setShowOTPModal] = useState(false)
 
+
+
+    let sendOTP = async (email) => {
+
+        try {
+            setLoading(true)
+            let respose = await axios.post("http://127.0.0.1:5500/api/auth/send-otp/", { email })
+            toast.success(respose.data.msg)
+            setShowOTPModal(true)
+        } catch (error) {
+            console.log(error.response.data.msg);
+            toast.error(error.response.data.msg)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    let verifyOTP = async (email, otp) => {
+        try {
+            setLoading(true)
+            let respose = await axios.post("http://127.0.0.1:5500/api/auth/verify-otp/", { email, otp })
+            toast.success(respose.data.msg)
+            setShowOTPModal(false)
+
+            try {
+                setLoading(true)
+                let respose = await axios.post("http://127.0.0.1:5500/api/auth/register/", data)
+                setData({
+                    username: "",
+                    email: "",
+                    password: "",
+                    isAccepted: false
+                })
+                navigate('/sign-in')
+                toast.success(respose.data.msg)
+            } catch (error) {
+                toast.error(error.response.data.msg)
+            } finally {
+                setLoading(false)
+            }
+
+        } catch (error) {
+            toast.error(error.response.data.msg)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+
+
+
+    let handleSubmit = async (event) => {
+        if (loading) return;
+        event.preventDefault();
         if (data.username.trim() == '') {
             return toast.error("Username is Required")
         } else if (data.email.trim() == '') {
@@ -26,17 +83,9 @@ function Signup() {
         } else if (data.isAccepted == false) {
             return toast.error("Please Accept Terms of Conditions")
         }
-        console.log("submitted", data) // send to backend
-        toast.success("Account Created Successfully")
 
-
-        setData({
-            username: "",
-            email: "",
-            password: "",
-            isAccepted: false
-        })
-        navigate('/sign-in')
+        // send OTP
+        await sendOTP(data.email)
     }
 
     return (
@@ -64,8 +113,8 @@ function Signup() {
                             placeholder="Email address"
                             leftIcon={User2Icon}
                             onChange={(e) => setData({ ...data, email: e.target.value })}
-                            className='py-3'
                             value={data.email}
+                            className='py-3'
 
                         />
 
@@ -106,7 +155,7 @@ function Signup() {
                             fullWidth
                             type="submit"
                         >
-                            Create Account
+                            {loading ? "Processing..." : "Create Account"}
                         </Button>
                     </form>
 
@@ -128,6 +177,8 @@ function Signup() {
 
 
             </div>
+
+            <OTPModal isOpen={showOTPModal} email={data.email} onClose={() => { setShowOTPModal(false) }} onVerify={verifyOTP} onResend={sendOTP} />
         </div>
     );
 }

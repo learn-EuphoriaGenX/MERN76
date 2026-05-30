@@ -4,7 +4,7 @@ import Button from '../common/Button';
 import Input from '../common/Input';
 import { Link, NavLink } from 'react-router-dom';
 
-export default function Navbar() {
+export default function Navbar({ isAuthenticated, setIsAuthenticated }) {
 
     const navLinks = [
         { name: 'Problems', link: '/problems' },
@@ -23,7 +23,7 @@ export default function Navbar() {
                         <Link to="/">
                             <div className="flex items-center gap-2">
                                 <div className="w-8 h-8 bg-[#f9b13f] rounded flex items-center justify-center text-black font-bold text-xl">
-                                    L
+                                    L 
                                 </div>
                                 <span className="text-white font-semibold text-2xl tracking-tight">
                                     LeetCode
@@ -64,19 +64,26 @@ export default function Navbar() {
 
                         {/* Icons */}
 
-                        {/* <Button size='sm' variant='ghost'>
-                            <Bell size={20} />
-                        </Button>
-                        <Button size='sm' variant='ghost' >
-                            <User size={20} />
-                        </Button> */}
 
 
-                        <Link to="/sign-in">
-                            <Button variant='ghost' className='whitespace-nowrap'>
-                                Register or Log in
-                            </Button>
-                        </Link>
+
+                        {isAuthenticated ? (
+                            <>
+
+                                <Button size='sm' variant='ghost'>
+                                    <Bell size={20} />
+                                </Button>
+                                <Button size='sm' variant='ghost' >
+                                    <User size={20} />
+                                </Button>
+                            </>
+                        ) : (
+                            <Link to="/sign-in">
+                                <Button variant='ghost' className='whitespace-nowrap'>
+                                    Register or Log in
+                                </Button>
+                            </Link>
+                        )}
 
 
                         {/* Mobile Menu Button */}
