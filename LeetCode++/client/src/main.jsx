@@ -5,12 +5,16 @@ import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast';
 import "swiper/css";
+import { Provider } from 'react-redux'
+import store from './store'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <Toaster />
-      <App />
+      <Provider store={store}>
+        <Toaster />
+        <App />
+      </Provider>
     </BrowserRouter>
   </StrictMode>,
 )

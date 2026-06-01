@@ -6,8 +6,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 
-function Signin({ setIsAuthenticated }) {
+import { useSelector, useDispatch } from "react-redux";
+import {
+    setUser,
+} from "../../features/auth/authSlice";
 
+function Signin() {
+
+    let dispatch = useDispatch()
     let [data, setData] = useState({
         email: "",
         password: ""
@@ -29,14 +35,21 @@ function Signin({ setIsAuthenticated }) {
 
         try {
             setLoading(true)
-            console.log(data);
 
-            let respose = await axios.post("http://127.0.0.1:5500/api/auth/login/", data)
-            console.log(respose.data);
+            let response = await axios.post("http://127.0.0.1:5500/api/auth/login/", data)
+            
 
-            toast.success(respose.data.msg)
-            setIsAuthenticated(true)
-            // navigate('/')
+            toast.success(response.data.msg)
+            dispatch(setUser({
+                _id: response.data.user._id,
+                token: response.data.token,
+                username: response.data.user.username,
+                email: response.data.user.email,
+                role: response.data.user.role,
+                profileImg: response.data.user.profileImg
+            }))
+            localStorage.setItem('token', response.data.token)
+            navigate('/')
 
         } catch (error) {
             toast.error(error.response.data.msg)

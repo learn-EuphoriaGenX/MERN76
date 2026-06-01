@@ -1,18 +1,32 @@
-import { Search, Bell, User, Menu, X, BellDot } from 'lucide-react';
+import { Search, Bell, User, Menu, X, BellDot, LogOutIcon } from 'lucide-react';
 import { useState } from 'react';
 import Button from '../common/Button';
 import Input from '../common/Input';
 import { Link, NavLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { removeUser } from '../../features/auth/authSlice';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
-export default function Navbar({ isAuthenticated, setIsAuthenticated }) {
+export default function Navbar() {
+    let user = useSelector((data) => data.auth)
+    let dispatch = useDispatch()
+    let navigate = useNavigate()
 
     const navLinks = [
-        { name: 'Problems', link: '/problems' },
-        { name: 'Create', link: '/create' },
-        { name: 'Discuss', link: '/discuss' },
-        { name: 'Store', link: '/store#merchandise' },
-        { name: 'Test', link: '/test' }
+        { name: 'Problems', link: '/problems', users: ['user', 'admin'] },
+        { name: 'Create', link: '/create', users: ['admin'] },
+        { name: 'Discuss', link: '/discuss', users: ['user', 'admin'] },
+        { name: 'Store', link: '/store#merchandise', users: ['user', 'admin'] },
+        { name: 'Test', link: '/test', users: ['user', 'admin'] }
     ];
+
+    let handleLogout = () => {
+        localStorage.removeItem('token')
+        dispatch(removeUser())
+        navigate('/sign-in')
+        toast.success("Logout Successfully")
+    }
 
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0f1117] border-b border-gray-800">
@@ -23,7 +37,7 @@ export default function Navbar({ isAuthenticated, setIsAuthenticated }) {
                         <Link to="/">
                             <div className="flex items-center gap-2">
                                 <div className="w-8 h-8 bg-[#f9b13f] rounded flex items-center justify-center text-black font-bold text-xl">
-                                    L 
+                                    L
                                 </div>
                                 <span className="text-white font-semibold text-2xl tracking-tight">
                                     LeetCode
@@ -34,17 +48,19 @@ export default function Navbar({ isAuthenticated, setIsAuthenticated }) {
                         {/* Desktop Navigation */}
                         <div className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-300">
                             {navLinks.map((item, idx) => (
-                                <NavLink
-                                    key={idx}
-                                    to={item.link}
-                                    className={({ isActive }) =>
-                                        isActive
-                                            ? "text-[#f9b13f] transition-colors hover:underline underline-offset-4"
-                                            : "text-gray-300 transition-colors hover:underline underline-offset-4"
-                                    }
-                                >
-                                    {item.name}
-                                </NavLink>
+                                item.users.includes(user.role) && (
+                                    <NavLink
+                                        key={idx}
+                                        to={item.link}
+                                        className={({ isActive }) =>
+                                            isActive
+                                                ? "text-[#f9b13f] transition-colors hover:underline underline-offset-4"
+                                                : "text-gray-300 transition-colors hover:underline underline-offset-4"
+                                        }
+                                    >
+                                        {item.name}
+                                    </NavLink>
+                                )
                             ))}
                         </div>
                     </div>
@@ -67,14 +83,15 @@ export default function Navbar({ isAuthenticated, setIsAuthenticated }) {
 
 
 
-                        {isAuthenticated ? (
+                        {user.username ? (
                             <>
 
                                 <Button size='sm' variant='ghost'>
                                     <Bell size={20} />
                                 </Button>
-                                <Button size='sm' variant='ghost' >
-                                    <User size={20} />
+                                <Button onClick={handleLogout} size='sm' variant='ghost' className='flex items-center  gap-2'>
+                                    <span className='pb-1'> {user.username}</span>
+                                    <LogOutIcon size={20} color='red' />
                                 </Button>
                             </>
                         ) : (
