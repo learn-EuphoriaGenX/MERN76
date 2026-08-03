@@ -5,7 +5,7 @@ let router = express.Router()
 
 
 router.post('/createOrder', auth(['user', 'admin']), createOrder)
-router.post('verifyPayment', auth(['user', 'admin']), verifyPayment)
+router.post('/verifyPayment', auth(['user', 'admin']), verifyPayment)
 
 
 

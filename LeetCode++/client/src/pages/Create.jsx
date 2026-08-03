@@ -6,6 +6,8 @@ import Highlight from '@tiptap/extension-highlight';
 import CodeBlock from '@tiptap/extension-code-block';
 import BulletList from '@tiptap/extension-bullet-list';
 import OrderedList from '@tiptap/extension-ordered-list';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 export default function Create() {
   const [form, setForm] = useState({
@@ -83,29 +85,44 @@ export default function Create() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    console.log(form);
 
-    setTimeout(() => {
-      console.log('Submitted Problem:', form);
-      alert('✅ Problem submitted successfully! (This is a demo)');
-      setIsSubmitting(false);
+    try {
+      let response = await axios.post('http://127.0.0.1:5500/api/problems', form, {
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": `${localStorage.getItem('token')}`
+        }
+      })
+      if (response.data.success) {
+        toast.success(response.data.msg);
+        setForm({
+          title: '',
+          difficulty: 'Medium',
+          tags: [],
+          description: '<p>Write the problem statement here...</p>',
+          inputFormat: '',
+          outputFormat: '',
+          examples: [{ input: '', output: '', explanation: '' }],
+          constraints: '',
+        });
+        setCurrentTag('');
+        editor?.commands.setContent('<p>Write the problem statement here...</p>');
+      } else {
+        toast.error(response.data.msg)
+      }
 
-      // Reset form
-      setForm({
-        title: '',
-        difficulty: 'Medium',
-        tags: [],
-        description: '<p>Write the problem statement here...</p>',
-        inputFormat: '',
-        outputFormat: '',
-        examples: [{ input: '', output: '', explanation: '' }],
-        constraints: '',
-      });
-      setCurrentTag('');
-      editor?.commands.setContent('<p>Write the problem statement here...</p>');
-    }, 1200);
+
+    } catch (error) {
+
+      console.log(error.response.data);
+
+      toast.error(error.response.data.msg || "Something went wrong!");
+    }
+
+
   };
 
   // Toolbar Button Styles

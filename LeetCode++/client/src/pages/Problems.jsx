@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Cable, Database, Star, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function Problems() {
   const topics = [
@@ -9,44 +10,7 @@ export default function Problems() {
     { icon: <Database className="w-5 h-5" />, name: "Database" },
   ];
 
-  const problems = [
-    {
-      id: 1,
-      title: "Container With Most Water",
-      difficulty: "Medium",
-      acceptance: "52.3%",
-      tags: ["Array", "Two Pointers", "Greedy"],
-      isFavourite: true,
-      slug: "container-with-most-water"
-    },
-    {
-      id: 2,
-      title: "Longest Substring Without Repeating Characters",
-      difficulty: "Medium",
-      acceptance: "34.8%",
-      tags: ["String", "Sliding Window", "Hash Table"],
-      isFavourite: false,
-      slug: "longest-substring-without-repeating-characters"
-    },
-    {
-      id: 3,
-      title: "3Sum",
-      difficulty: "Medium",
-      acceptance: "31.2%",
-      tags: ["Array", "Two Pointers", "Sorting"],
-      isFavourite: false,
-      slug: "3sum"
-    },
-    {
-      id: 2,
-      title: "Longest Substring Without Repeating Characters",
-      difficulty: "Medium",
-      acceptance: "34.8%",
-      tags: ["String", "Sliding Window", "Hash Table"],
-      isFavourite: false,
-      slug: "longest-substring-without-repeating-characters"
-    }
-  ];
+  const [problems, setProblems] = useState([])
 
   const navigate = useNavigate()
 
@@ -59,6 +23,17 @@ export default function Problems() {
     if (difficulty === "Medium") return "text-amber-500 bg-amber-500/10";
     return "text-red-500 bg-red-500/10";
   };
+
+
+
+  useEffect(() => {
+    const getAllProblems = async () => {
+      const respose = await axios.get("http://127.0.0.1:5500/api/problems")
+      setProblems(respose.data.problems)
+    }
+    getAllProblems()
+  }, [])
+
 
   return (
     <div className="bg-zinc-950 min-h-screen text-white px-30 py-10">
@@ -82,11 +57,15 @@ export default function Problems() {
       <div>
         <h2 className="text-2xl font-bold mb-6">Problems</h2>
 
+        {
+          problems.length == 0 && <p>No problems found</p>
+        }
+
         <div className="space-y-4">
           {problems.map((problem) => (
             <div
               key={problem.id}
-              onClick={() => { navigateTo(problem.slug) }}
+              onClick={() => { navigateTo(problem._id) }}
               className="group bg-zinc-900 border border-zinc-800 hover:border-zinc-700 rounded-2xl p-5 flex items-center gap-6 transition-all hover:shadow-xl"
             >
               {/* Favourite Button */}
@@ -125,7 +104,7 @@ export default function Problems() {
 
                 {/* Acceptance */}
                 <div className="text-zinc-400 min-w-[80px] text-right">
-                  {problem.acceptance}
+                  {problem.acceptance? problem.acceptance : '50%'}
                 </div>
 
                 {/* Link Arrow */}
@@ -138,3 +117,6 @@ export default function Problems() {
     </div>
   );
 }
+
+
+// redux payment 

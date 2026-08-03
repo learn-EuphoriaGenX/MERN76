@@ -28,7 +28,7 @@ function Signup() {
             setLoading(true)
             let respose = await axios.post("http://127.0.0.1:5500/api/auth/send-otp/", { email })
             toast.success(respose.data.msg)
-            setShowOTPModal(true)
+            setShowOTPModal(true)   
         } catch (error) {
             console.log(error.response.data.msg);
             toast.error(error.response.data.msg)

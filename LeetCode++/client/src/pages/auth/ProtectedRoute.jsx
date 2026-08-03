@@ -1,21 +1,36 @@
-import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import Loading from "../Loading";
+import toast from "react-hot-toast";
 
-let ProtectedRoute = ({ children, allowedRoles = [] }) => {
+const ProtectedRoute = ({
+    children,
+    loading,
+    allowedRoles = [],
+}) => {
 
-    let { token, role } = useSelector((data) => data.auth)
-    if (!token) {
-        toast.error("You must be logged in to access this page")
-        return <Navigate to="/sign-in" replace />
+    const user = useSelector((state) => state.auth);
+
+    if (loading) {
+        return (
+            <Loading />
+        );
     }
-    if (allowedRoles && allowedRoles.length > 0) {
-        if (!allowedRoles.includes(role)) {
-            toast.error("You are not authorized to access this page")
-            return <Navigate to="/" replace />
-        }
+
+    if (!user?.token) {
+        toast.error("Please login first")
+        return <Navigate to="/sign-in" replace />;
     }
-    return children
-}
+
+    if (
+        allowedRoles.length > 0 &&
+        !allowedRoles.includes(user.role)
+    ) {
+        toast.error("You are not authorized to access this page")
+        return <Navigate to="/" replace />;
+    }
+
+    return children;
+};
 
 export default ProtectedRoute;

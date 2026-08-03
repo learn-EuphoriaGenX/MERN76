@@ -18,7 +18,6 @@ export default function Navbar() {
         { name: 'Create', link: '/create', users: ['admin'] },
         { name: 'Discuss', link: '/discuss', users: ['user', 'admin'] },
         { name: 'Store', link: '/store#merchandise', users: ['user', 'admin'] },
-        { name: 'Test', link: '/test', users: ['user', 'admin'] }
     ];
 
     let handleLogout = () => {
